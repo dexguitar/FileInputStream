@@ -8,13 +8,12 @@ import java.io.File;
 
 import static org.junit.Assert.*;
 
-public class ReaderTest {
+public class FileWorkerTest {
 
     @Test
     public void analyzeShouldReturn32KeywordsFromFile() {
-        Reader reader = new Reader();
         File file1 = new File("src/binSearch.java");
-        String toAnalyze = reader.fileToString(file1);
+        String toAnalyze = FileWorker.fileToString(file1);
 
         assertEquals("class\n" +
                 "private\n" + "static\n" + "int\n" + "public\n" + "static\n" +
@@ -23,16 +22,31 @@ public class ReaderTest {
                 "while\n" + "int\n" + "if\n" + "else\n" + "if\n" + "else\n" +
                 "if\n" + "break\n" + "if\n" + "return\n" + "return\n" +
                 "public\n" + "static\n" + "void\n" + "int\n" + "\n" +
-                "total: 32", reader.analyze(toAnalyze));
+                "total: 32", FileWorker.analyze(toAnalyze));
     }
 
     @Test
     public void analyzeShouldReturn2KeywordsFromFile() {
-        Reader reader = new Reader();
         File file2 = new File("src/testFile.java");
-        String toAnalyze = reader.fileToString(file2);
+        String toAnalyze = FileWorker.fileToString(file2);
 
         assertEquals("public\n" + "class\n" + "\n" +
-                "total: 2", reader.analyze(toAnalyze));
+                "total: 2", FileWorker.analyze(toAnalyze));
+    }
+
+    @Test
+    public void analyzeShouldReturn2KeywordsAfterProcessingCorruptFile() {
+        File file3 = new File("src/corruptFile.java");
+        String toAnalyze = FileWorker.fileToString(file3);
+
+        assertEquals("public\n" + "class\n" + "\n" +
+                "total: 2", FileWorker.analyze(toAnalyze));
+    }
+
+    @Test
+    public void analyzeShouldReturnNull() {
+        String toAnalyze = "";
+
+        assertEquals("" + "\n" + "total: 0", FileWorker.analyze(toAnalyze));
     }
 }
